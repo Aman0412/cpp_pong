@@ -40,8 +40,8 @@ int main()
 	ball.setOrigin(ball.getRadius(),ball.getRadius());
 
 	//creating ball velocity
-	float yvel = -.5;
-	float xvel = 0.5;
+	float yvel = -.45;
+	float xvel = 0.45;
 
 	//create middle line 
 	sf::RectangleShape midline(sf::Vector2f(10.f,1000000.f));
@@ -154,7 +154,7 @@ int main()
 			ball.setPosition(brgin);
 	
 		}
-		if  (p1.getGlobalBounds().intersects(ball.getGlobalBounds())){
+		if  (p1.getGlobalBounds().intersects(ball.getGlobalBounds()) || p2.getGlobalBounds().intersects(ball.getGlobalBounds())){
 			xvel = -xvel;
 		}
 
