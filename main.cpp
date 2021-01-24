@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <string>
 #include <iostream>
-
 
 int main()
 {
@@ -20,7 +20,6 @@ int main()
 	sf::Font p1text;
 	if (!p1text.loadFromFile("C:\\Users\\amanp\\Downloads\\fff-forward\\FFFFORWA.ttf"))
 		{
-			std::cout<<"cannot load font" << std::endl;
 		}
 	p1score.setFont(p1text);
 	p1score.setString("0");
@@ -36,18 +35,34 @@ int main()
 
 	//create ball
 	sf::CircleShape ball(12.5f);
-	ball.setPosition(400.f,200.f);
+	sf::Vector2f brgin(400.f,200.f);
+	ball.setPosition(brgin);
 	ball.setOrigin(ball.getRadius(),ball.getRadius());
-	
+
+	//creating ball velocity
+	float yvel = -.5;
+	float xvel = 0.5;
+
 	//create middle line 
 	sf::RectangleShape midline(sf::Vector2f(10.f,1000000.f));
 	midline.setOrigin(5.f,500000.f);
 	midline.setPosition(400.f,200.f);
 
+	int p1scorenum =0;
+	int p2scorenum =0;
+
 	while (window.isOpen())
 	{
 		//event is for if the the close button is pressed, it will close the game
+		sf::Vector2f bvel(xvel,yvel);
+
+		std::string strscore1 = std::to_string(p1scorenum);
+		std::string strscore2 = std::to_string(p2scorenum);
+		p1score.setString(strscore1);
+		p2score.setString(strscore2);
+		
 		sf::Event event;
+		
 		while (window.pollEvent(event))
 		{
 			switch (event.type) 
@@ -120,9 +135,28 @@ int main()
 		}
 		
 		//move our ball
-//		ball.move(-.5f,-.5f);
-		
-
+		ball.move(bvel);
+		if (ball.getPosition().y <= 0 ) { 
+			yvel = -yvel;
+		}
+		if (ball.getPosition().y + ball.getLocalBounds().height >= window.getSize().y){
+			yvel = -yvel;
+		}		
+		//update our count score if the player misses the ball
+		if ( ball.getPosition().x + ball.getLocalBounds().width >= window.getSize().x ) { 
+			p1scorenum++;
+			xvel= -xvel;
+			ball.setPosition(brgin);
+		}
+		if (ball.getPosition().x <= 0 ){
+			p2scorenum++;			
+			xvel= -xvel;
+			ball.setPosition(brgin);
+	
+		}
+		if  (p1.getGlobalBounds().intersects(ball.getGlobalBounds())){
+			xvel = -xvel;
+		}
 
 		window.clear();
 		window.draw(p1);
